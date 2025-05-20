@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "date": "2025-05-01",
+    "title": "Mastering Pasta Al Dente",
+    "content": "Learn the secret to perfectly cooked pasta every time.",
+    "category": "Cooking Tips"
+  },
+  {
+    "id": 2,
+    "date": "2025-05-03",
+    "title": "Vegan Dessert Ideas",
+    "content": "Explore plant-based sweets that everyone will love.",
+    "category": "Recipes"
+  },
+  {
+    "id": 3,
+    "date": "2025-05-05",
+    "title": "Quick Weeknight Meals",
+    "content": "Delicious dinners ready in under 30 minutes.",
+    "category": "Recipes"
+  },
+  {
+    "id": 4,
+    "date": "2025-05-07",
+    "title": "Knife Skills 101",
+    "content": "Sharpen your chopping techniques with these tips.",
+    "category": "Cooking Tips"
+  },
+  {
+    "id": 5,
+    "date": "2025-05-09",
+    "title": "Baking Sourdough Bread",
+    "content": "A beginner’s guide to artisan bread at home.",
+    "category": "Recipes"
+  },
+  {
+    "id": 6,
+    "date": "2025-05-11",
+    "title": "Spice Up Your Dishes",
+    "content": "How to use spices to elevate your cooking.",
+    "category": "Cooking Tips"
+  }
+]

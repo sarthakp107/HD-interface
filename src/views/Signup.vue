@@ -57,6 +57,10 @@
 
       <button type="submit" class="btn btn-success w-100">Create Account</button>
     </form>
+    <div v-if="signupSuccess" class="alert alert-success">
+  {{ signupSuccess }}
+</div>
+
   </div>
 </template>
 
@@ -74,44 +78,60 @@ export default {
       passwordError: "",
       confirmPasswordError: "",
       signupError: "",
+      signupSuccess: "",
     };
   },
   methods: {
     handleSignup() {
-      // Reset all errors
-      this.nameError = this.emailError = this.passwordError = this.confirmPasswordError = this.signupError = "";
+     this.nameError = this.emailError = this.passwordError = this.confirmPasswordError = this.signupError = "";
 
-      // Validation
-      if (this.name.trim().length < 2) {
-        this.nameError = "Please enter your full name.";
-      }
-      if (!this.email.includes("@")) {
-        this.emailError = "Enter a valid email.";
-      }
-      if (this.password.length < 6) {
-        this.passwordError = "Password must be at least 6 characters.";
-      }
-      if (this.confirmPassword !== this.password) {
-        this.confirmPasswordError = "Passwords do not match.";
-      }
+  // Validation
+  if (this.name.trim().length < 2) {
+    this.nameError = "Please enter your full name.";
+  }
+  if (!this.email.includes("@")) {
+    this.emailError = "Enter a valid email.";
+  }
+  if (this.password.length < 6) {
+    this.passwordError = "Password must be at least 6 characters.";
+  }
+  if (this.confirmPassword !== this.password) {
+    this.confirmPasswordError = "Passwords do not match.";
+  }
 
-      // Stop if any error exists
-      if (
-        this.nameError ||
-        this.emailError ||
-        this.passwordError ||
-        this.confirmPasswordError
-      ) {
-        return;
-      }
+  if (
+    this.nameError ||
+    this.emailError ||
+    this.passwordError ||
+    this.confirmPasswordError
+  ) {
+    return;
+  }
 
-      // Dummy success (replace with API call)
-      if (this.email === "existing@example.com") {
-        this.signupError = "An account with this email already exists.";
-      } else {
-        alert("Account created successfully!");
-        this.$router.push("/login"); // Redirect to login page
+  // Call backend
+  const formData = new FormData();
+  formData.append("name", this.name);
+  formData.append("email", this.email);
+  formData.append("password", this.password);
+
+  fetch("http://localhost/interface/signup.php", {
+    method: "POST",
+    body: formData,
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success) {
+    this.signupSuccess = "Account created successfully! Redirecting to login...";
+    setTimeout(() => {
+      this.$router.push("/login");
+    }, 2000); // wait 2 seconds before redirecting
+  } else {
+        this.signupError = data.message || "Signup failed.";
       }
+    })
+    .catch(() => {
+      this.signupError = "Server error. Please try again later.";
+    });
     },
   },
 };

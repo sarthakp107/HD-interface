@@ -32,14 +32,22 @@
         {{ loginError }}
       </div>
 
-      <button type="submit" class="btn btn-primary w-100">Login</button>
+      <button type="submit" class="btn btn-primary w-100" :disabled="loading">
+        {{ loading ? 'Logging in...' : 'Login' }}
+      </button>
     </form>
   </div>
 </template>
 
 <script>
+import { useAuthStore } from '../stores/auth'
+
 export default {
   name: "Login",
+   setup() {
+    const auth = useAuthStore()
+    return { auth }
+  },
   data() {
     return {
       email: "",
@@ -47,30 +55,48 @@ export default {
       emailError: "",
       passwordError: "",
       loginError: "",
+      loading: false,
     };
   },
   methods: {
-    handleLogin() {
+    async handleLogin() {
       this.emailError = "";
       this.passwordError = "";
       this.loginError = "";
 
-      // Basic validation
+      // Basic client-side validation
       if (!this.email.includes("@")) {
         this.emailError = "Please enter a valid email address.";
       }
       if (this.password.length < 6) {
         this.passwordError = "Password must be at least 6 characters.";
       }
-
       if (this.emailError || this.passwordError) return;
 
-      // Dummy login logic (replace with API/auth check)
-      if (this.email === "user@example.com" && this.password === "password123") {
-        this.$emit("login-success", this.email); // Pass email to parent if needed
-        this.$router.push("/recipes"); // Redirect to another page
-      } else {
-        this.loginError = "Invalid credentials. Try again.";
+      this.loading = true;
+
+      try {
+        const formData = new FormData();
+        formData.append("email", this.email);
+        formData.append("password", this.password);
+
+        const response = await fetch("http://localhost/interface/login.php", {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            this.auth.login(this.email, result.name); 
+          this.$router.push("/");
+        } else {
+          this.loginError = result.message || "Login failed. Please try again.";
+        }
+      } catch (error) {
+        this.loginError = "Error Connecting";
+      } finally {
+        this.loading = false;
       }
     },
   },

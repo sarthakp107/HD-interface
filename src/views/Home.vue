@@ -1,6 +1,7 @@
 <template>
   <div class="container my-5">
-    <h1 class="text-center mb-4 text-primary display-5">Welcome to <strong>Recipe Haven</strong></h1>
+    <h1 class="text-center mb-4 text-primary display-5" v-if="auth.authenticated">Hey! {{auth.userName}}, Welcome to <strong>Recipe Haven</strong></h1>
+    <h1 class="text-center mb-4 text-primary display-5" v-if="!auth.authenticated"> Welcome to <strong>Recipe Haven</strong></h1>
 
     <p class="lead text-center text-muted mb-5">
       Discover delicious recipes for every occasion — from quick weeknight dinners to indulgent desserts. <br />
@@ -38,8 +39,15 @@
 </template>
 
 <script>
+import { useAuthStore } from '../stores/auth'
+
 export default {
   name: 'Home',
+  computed: {
+    auth() {
+      return useAuthStore()
+    }
+  }
 };
 </script>
 

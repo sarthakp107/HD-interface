@@ -1,6 +1,6 @@
 <template>
   <div class="container my-4">
-    <h2>Recipe List (Search: "chicken")</h2>
+    <h2>Recipe List</h2>
 
     <div v-if="loading" class="text-center">Loading recipes...</div>
     <div v-else-if="error" class="alert alert-danger">{{ error }}</div>

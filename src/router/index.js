@@ -5,6 +5,7 @@ import News from '../views/News.vue'
 import RecipesOnline from '../views/RecipesOnline.vue'
 import Login from '../views/Login.vue'
 import Signup from '../views/Signup.vue'
+import CreateRecipe from '../views/CreateRecipe.vue'
 
 const routes = [
   {
@@ -41,6 +42,12 @@ const routes = [
     name: 'Signup',
 
     component: Signup
+  },
+  {
+    path: '/create-recipe',
+    name: 'CreateRecipe',
+
+    component: CreateRecipe
   },
 ]
 

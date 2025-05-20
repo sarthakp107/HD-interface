@@ -3,7 +3,9 @@
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
     <router-link to="/news">News</router-link> |
-    <router-link to="/recipes-online">Chicken Recipe Online</router-link>
+    <router-link to="/recipes-online">Chicken Recipe Online</router-link> | 
+    <router-link to="/login">Login</router-link> |
+    <router-link to="/signup">Sign up</router-link> |
   </nav>
   <router-view/>
 </template>

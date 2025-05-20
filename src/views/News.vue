@@ -3,11 +3,29 @@
     <h2 class="mb-4">Recipe News</h2>
     <div class="mb-3">
       <input
-        v-model="searchQuery"
+        v-model="titleQuery"
         type="text"
         class="form-control"
-        placeholder="Search by date, title, content, or category"
+        placeholder="Search by title"
       />
+<!-- Date Search -->
+  <input
+    v-model="dateQuery"
+    type="text"
+    class="form-control mb-2"
+    placeholder="Search by date (e.g. 2024-10-01)"
+  />
+
+  <!-- Content Search -->
+  <input
+    v-model="contentQuery"
+    type="text"
+    class="form-control mb-2"
+    placeholder="Search by content"
+  />
+
+
+
       <label for="">Category</label><br>
       <input type="radio" id="All" v-model="categoryFilter" value="" />
 <label for="All"> All</label><br>
@@ -53,7 +71,9 @@ export default {
   data() {
     return {
       news: newsData,
-      searchQuery: '',
+      titleQuery: '',
+      dateQuery: '',
+    contentQuery: '',
       categoryFilter: '',
       currentPage: 1,
       itemsPerPage: 4,
@@ -61,13 +81,19 @@ export default {
   },
   computed: {
     filteredNews() {
-      const query = this.searchQuery.toLowerCase();
-      const queryCategory = this.categoryFilter.toLowerCase();
-      return this.news.filter(
-        (item) =>
-          item.title.toLowerCase().includes(query) &&
-          item.category.toLowerCase().includes(queryCategory)
-      );
+      const title = this.titleQuery.toLowerCase();
+    const date = this.dateQuery.toLowerCase();
+    const content = this.contentQuery.toLowerCase();
+    const category = this.categoryFilter.toLowerCase();
+
+    return this.news.filter((item) => {
+      const matchesTitle = item.title.toLowerCase().includes(title);
+      const matchesDate = item.date.toLowerCase().includes(date);
+      const matchesContent = item.content.toLowerCase().includes(content);
+      const matchesCategory = !category || item.category.toLowerCase() === category;
+
+      return matchesTitle && matchesDate && matchesContent && matchesCategory;
+    });
     },
     totalPages() {
       return Math.ceil(this.filteredNews.length / this.itemsPerPage);

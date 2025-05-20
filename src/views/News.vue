@@ -118,12 +118,12 @@ export default {
     });
     },
     totalPages() {
-      return Math.ceil(this.filteredNews.length / this.itemsPerPage);
+      return Math.ceil(this.filteredNews.length / this.itemsPerPage); //rounds up 
     },
     paginatedNews() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
-      return this.filteredNews.slice(start, end);
+      return this.filteredNews.slice(start, end); // does not include the end
     },
   },
 };

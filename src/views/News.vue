@@ -8,6 +8,14 @@
         class="form-control"
         placeholder="Search by date, title, content, or category"
       />
+      <label for="">Category</label><br>
+      <input type="radio" id="All" v-model="categoryFilter" value="" />
+<label for="All"> All</label><br>
+      <input type="radio" id="Cooking Tips" v-model="categoryFilter" value="Cooking Tips"/>
+      <label for="Cooking Tips"> Cooking Tips</label><br>
+      <input type="radio" id="Recipes" v-model="categoryFilter" value="Recipes"/>
+      <label for="Recipes"> Recipes</label>
+
     </div>
     <div class="row">
       <div v-for="item in paginatedNews" :key="item.id" class="col-md-6 mb-3">
@@ -46,6 +54,7 @@ export default {
     return {
       news: newsData,
       searchQuery: '',
+      categoryFilter: '',
       currentPage: 1,
       itemsPerPage: 4,
     };
@@ -53,9 +62,11 @@ export default {
   computed: {
     filteredNews() {
       const query = this.searchQuery.toLowerCase();
+      const queryCategory = this.categoryFilter.toLowerCase();
       return this.news.filter(
         (item) =>
-          item.title.toLowerCase().includes(query) 
+          item.title.toLowerCase().includes(query) &&
+          item.category.toLowerCase().includes(queryCategory)
       );
     },
     totalPages() {

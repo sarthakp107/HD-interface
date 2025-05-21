@@ -5,17 +5,20 @@ export const useAuthStore = defineStore('auth', {
     authenticated: false,
     userEmail: '',
     userName: '', 
+    userId: null
   }),
   actions: {
-    login(email, name) {
+    login(email, name, id) {
       this.authenticated = true
       this.userEmail = email
       this.userName = name || 'Guest'
+      this.userId = id 
     },
     logout() {
       this.authenticated = false
       this.userEmail = ''
       this.userName = ''
+      this.userId = null
     }
   }
 })

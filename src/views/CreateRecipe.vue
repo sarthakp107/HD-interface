@@ -23,7 +23,13 @@
 </template>
 
 <script>
+import { useAuthStore } from '../stores/auth'
+
 export default {
+    setup() {
+    const auth = useAuthStore()
+    return { auth }
+  },
   data() {
     return {
       title: '',
@@ -43,6 +49,7 @@ export default {
        const formData = new URLSearchParams();
         formData.append('title', this.title);
         formData.append('description', this.description);
+        formData.append('user_id', this.auth.userId);
 
         const response = await fetch('http://localhost/interface/create.php', {
           method: 'POST',
@@ -59,10 +66,12 @@ export default {
           this.successMsg = 'Recipe created successfully!';
           this.title = '';
           this.description = '';
+          this.$router.push('/my-recipe')
         } else {
           this.errorMsg = result.message || 'Failed to create recipe.';
         }
       } catch (error) {
+        console.log(error);
         this.errorMsg = 'Error connecting to server.';
       } finally {
         this.loading = false;

@@ -64,7 +64,6 @@ export default {
       this.passwordError = "";
       this.loginError = "";
 
-      // Basic client-side validation
       if (!this.email.includes("@")) {
         this.emailError = "Please enter a valid email address.";
       }
@@ -88,12 +87,13 @@ export default {
         const result = await response.json();
 
         if (result.success) {
-            this.auth.login(this.email, result.name); 
+            this.auth.login(this.email, result.name, result.id); 
           this.$router.push("/");
         } else {
           this.loginError = result.message || "Login failed. Please try again.";
         }
       } catch (error) {
+        console.log("login error: ", error);
         this.loginError = "Error Connecting";
       } finally {
         this.loading = false;

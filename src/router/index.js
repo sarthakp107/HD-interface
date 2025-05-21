@@ -6,6 +6,7 @@ import RecipesOnline from '../views/RecipesOnline.vue'
 import Login from '../views/Login.vue'
 import Signup from '../views/Signup.vue'
 import CreateRecipe from '../views/CreateRecipe.vue'
+import MyRecipes from '../views/MyRecipes.vue'
 
 const routes = [
   {
@@ -48,6 +49,12 @@ const routes = [
     name: 'CreateRecipe',
 
     component: CreateRecipe
+  },
+  {
+    path: '/my-recipe',
+    name: 'MyRecipes',
+
+    component: MyRecipes
   },
 ]
 

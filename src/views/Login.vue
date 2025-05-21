@@ -79,7 +79,8 @@ export default {
         formData.append("email", this.email);
         formData.append("password", this.password);
 
-        const response = await fetch("http://localhost/interface/login.php", {
+        // const response = await fetch("/InterfaceData/login.php", {
+        const response = await fetch("https://mercury.swin.edu.au/cos30043/s104817068/hd-interface/InterfaceData/login.php", {
           method: "POST",
           body: formData,
         });

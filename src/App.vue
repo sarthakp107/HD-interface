@@ -3,7 +3,7 @@
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
     <router-link to="/news">News</router-link> |
-    <router-link v-if="auth.authenticated" to="/recipes-online">Chicken Recipes |</router-link>  
+    <router-link  to="/recipes-online">Chicken Recipes |</router-link>  
     <router-link  v-if="auth.authenticated" to="/create-recipe"> Create Recipe |</router-link>  
     <router-link  v-if="auth.authenticated" to="/my-recipe"> My Recipe |</router-link>  
     <router-link v-if="!auth.authenticated" to="/login">Login | </router-link>

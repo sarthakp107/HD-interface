@@ -51,7 +51,8 @@ export default {
         formData.append('description', this.description);
         formData.append('user_id', this.auth.userId);
 
-        const response = await fetch('http://localhost/interface/create.php', {
+        // const response = await fetch('../InterfaceData/create.php', {
+        const response = await fetch('https://mercury.swin.edu.au/cos30043/s104817068/hd-interface/InterfaceData/create.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',

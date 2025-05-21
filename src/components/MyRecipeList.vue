@@ -44,7 +44,7 @@ export default {
       formData.append('user_id', auth.userId);  // Use Pinia state here
 
       try {
-        const response = await fetch('http://localhost/interface/getrecipe.php', {
+        const response = await fetch('https://mercury.swin.edu.au/cos30043/s104817068/hd-interface/InterfaceData/getrecipe.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',

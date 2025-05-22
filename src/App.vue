@@ -6,6 +6,9 @@
     <router-link  to="/recipes-online">Chicken Recipes |</router-link>  
     <router-link  v-if="auth.authenticated" to="/create-recipe"> Create Recipe |</router-link>  
     <router-link  v-if="auth.authenticated" to="/my-recipe"> My Recipe |</router-link>  
+    <router-link  v-if="auth.authenticated" to="/browse"> Browse |</router-link>  
+     <router-link  v-if="auth.authenticated" to="/delete">Delete |</router-link>  
+     <router-link  v-if="auth.authenticated" to="/edit">Edit |</router-link>  
     <router-link v-if="!auth.authenticated" to="/login">Login | </router-link>
     <router-link v-if="!auth.authenticated" to="/signup">Sign up | </router-link> 
     <button v-if="auth.authenticated" @click="handleLogout">Logout</button>

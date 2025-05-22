@@ -1,6 +1,6 @@
 <template>
   <div class="container my-5">
-    <h2 class="mb-4">My Recipes Test</h2>
+    <h2 class="mb-4">Browse Recipes</h2>
 
     <div v-if="loading" class="text-muted">Loading recipes...</div>
     <div v-if="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
@@ -11,10 +11,10 @@
           <div class="card-body">
             <h5 class="card-title">{{ recipe.title }}</h5>
             <p class="card-text">{{ recipe.description }}</p>
+            <p class="text-muted">Likes: {{ recipe.likes }}</p>
+            <button class="btn btn-outline-primary btn-sm" @click="likeRecipe(recipe.id)">Like</button>
           </div>
         </div>
-
-       
       </div>
     </div>
 
@@ -23,8 +23,6 @@
 </template>
 
 <script>
-import { useAuthStore } from '../stores/auth';
-
 export default {
   data() {
     return {
@@ -40,34 +38,43 @@ export default {
     async fetchRecipes() {
       this.loading = true;
       this.errorMsg = '';
-
-      const auth = useAuthStore();
-      const formData = new URLSearchParams();
-      formData.append('user_id', auth.userId); 
-
       try {
-        const response = await fetch('https://mercury.swin.edu.au/cos30043/s104817068/hd-interface/InterfaceData/getrecipe.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: formData.toString(),
-        });
-
+        const response = await fetch('https://mercury.swin.edu.au/cos30043/s104817068/hd-interface/InterfaceData/get_all_recipes.php');
         const result = await response.json();
 
         if (result.success) {
           this.recipes = result.recipes;
         } else {
-          this.errorMsg = result.message || 'Failed to fetch recipes.';
+          this.errorMsg = result.message || 'Failed to load recipes.';
         }
-      } catch (error) {
+      } catch (err) {
         this.errorMsg = 'Error connecting to server.';
       } finally {
         this.loading = false;
       }
     },
+
+    async likeRecipe(recipeId) {
+      const formData = new URLSearchParams();
+      formData.append('recipe_id', recipeId);
+
+      try {
+        const response = await fetch('https://mercury.swin.edu.au/cos30043/s104817068/hd-interface/InterfaceData/like_recipe.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: formData.toString(),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          this.fetchRecipes(); // refresh
+        } else {
+          alert(result.message || 'Failed to like recipe.');
+        }
+      } catch (error) {
+        alert('Error connecting to server.');
+      }
+    },
   },
 };
 </script>
-

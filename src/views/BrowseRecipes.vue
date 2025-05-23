@@ -2,6 +2,9 @@
   <div class="container my-5">
     <h2 class="mb-4">Browse Recipes</h2>
 
+      <input v-model="searchQuery" @input="fetchRecipes" class="form-control" placeholder="Search recipes..." />
+
+
     <div v-if="loading" class="text-muted">Loading recipes...</div>
     <div v-if="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
 
@@ -12,7 +15,13 @@
             <h5 class="card-title">{{ recipe.title }}</h5>
             <p class="card-text">{{ recipe.description }}</p>
             <p class="text-muted">Likes: {{ recipe.likes }}</p>
-            <button class="btn btn-outline-primary btn-sm" @click="likeRecipe(recipe.id)">Like</button>
+            <p v-if="recipe.comment" class="text-primary">Comment: {{ recipe.comment }}</p>
+
+            <button class="btn btn-outline-primary btn-sm me-2" @click="likeRecipe(recipe.id)">Like</button>
+
+            <!-- Add comment input -->
+            <input v-model="recipe.newComment" type="text" class="form-control mt-2 mb-2" placeholder="Add a comment" />
+            <button class="btn btn-outline-success btn-sm" @click="submitComment(recipe.id, recipe.newComment)">Submit Comment</button>
           </div>
         </div>
       </div>
@@ -25,7 +34,7 @@
 <script>
 export default {
   data() {
-    return {
+    return {   
       recipes: [],
       loading: true,
       errorMsg: '',
@@ -43,7 +52,8 @@ export default {
         const result = await response.json();
 
         if (result.success) {
-          this.recipes = result.recipes;
+          // Add `newComment` field to each recipe object
+          this.recipes = result.recipes.map(r => ({ ...r, newComment: '' }));
         } else {
           this.errorMsg = result.message || 'Failed to load recipes.';
         }
@@ -67,12 +77,40 @@ export default {
 
         const result = await response.json();
         if (result.success) {
-          this.fetchRecipes(); // refresh
+          this.fetchRecipes();
         } else {
           alert(result.message || 'Failed to like recipe.');
         }
       } catch (error) {
         alert('Error connecting to server.');
+      }
+    },
+
+    async submitComment(recipeId, comment) {
+      if (!comment) {
+        alert("Comment cannot be empty.");
+        return;
+      }
+
+      const formData = new URLSearchParams();
+      formData.append('recipe_id', recipeId);
+      formData.append('comment', comment);
+
+      try {
+        const response = await fetch('https://mercury.swin.edu.au/cos30043/s104817068/hd-interface/InterfaceData/add_comment.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: formData.toString(),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          this.fetchRecipes();
+        } else {
+          alert(result.message || 'Failed to add comment.');
+        }
+      } catch (error) {
+        alert('Error submitting comment.');
       }
     },
   },

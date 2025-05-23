@@ -10,6 +10,7 @@ import MyRecipes from '../views/MyRecipes.vue'
 import Delete from '../views/Delete.vue'
 import Edit from '../views/Edit.vue'
 import BrowseRecipes from '../views/BrowseRecipes.vue'
+import RecipeDrag from '../views/dragdrop/RecipeDrag.vue'
 
 const routes = [
   {
@@ -76,6 +77,12 @@ const routes = [
     name: 'BrowseRecipes',
 
     component: BrowseRecipes
+  },
+  {
+    path: '/drag',
+    name: 'RecipeDrag',
+
+    component: RecipeDrag
   },
 ]
 

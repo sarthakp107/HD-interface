@@ -7,6 +7,7 @@
     <router-link  v-if="auth.authenticated" to="/create-recipe"> Create Recipe </router-link>  
     <router-link  v-if="auth.authenticated" to="/my-recipe"> My Recipe </router-link>  
     <router-link  v-if="auth.authenticated" to="/browse"> Browse </router-link>  
+    <router-link  v-if="auth.authenticated" to="/drag"> Drag And Drop </router-link>  
      <router-link  v-if="auth.authenticated" to="/delete"> Delete </router-link>  
      <router-link  v-if="auth.authenticated" to="/edit"> Edit </router-link>  
     <router-link v-if="!auth.authenticated" to="/login"> Login </router-link>

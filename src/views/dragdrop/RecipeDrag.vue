@@ -4,26 +4,27 @@
       <i class="bi bi-list-ul me-2"></i>Available Recipes
     </h3>
 
-    <div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
-      <draggable
-        :list="recipes"
-        :group="{ name: 'recipes', pull: 'clone', put: false }"
-        :clone="cloneRecipe"
-        itemKey="id"
-        class="d-flex flex-wrap gap-2"
-      >
-        <template #item="{ element }">
-          <div
-            class="card small-card text-center p-2 border-0 shadow-sm"
-            style="cursor: grab; transition: transform 0.2s ease;"
-            @mouseover="hover = true"
-            @mouseleave="hover = false"
-          >
-            <strong class="text-primary">{{ element.title }}</strong>
-          </div>
-        </template>
-      </draggable>
-    </div>
+    <div class="mb-4 overflow-auto">
+  <div class="d-flex flex-nowrap gap-3">
+    <draggable
+      :list="recipes"
+      :group="{ name: 'recipes', pull: 'clone', put: false }"
+      :clone="cloneRecipe"
+      itemKey="id"
+      class="d-flex flex-nowrap"
+    >
+      <template #item="{ element }">
+        <div
+          class="card small-card text-center px-3 py-2 border-0 shadow-sm flex-shrink-0"
+          style="min-width: 200px; cursor: grab; transition: transform 0.2s ease;"
+        >
+          <strong class="text-primary">{{ element.title }}</strong>
+        </div>
+      </template>
+    </draggable>
+  </div>
+</div>
+
 
     <h3 class="mb-4">
       <i class="bi bi-calendar-week me-2"></i>Meal Planner Calendar

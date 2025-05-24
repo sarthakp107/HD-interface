@@ -32,6 +32,7 @@
               :group="{ name: 'recipes', pull: true, put: true }"
               itemKey="id"
               @add="saveMealPlan"
+              @remove="onRecipeRemoved(day)"
               class="d-flex flex-column gap-2"
             >
               <template #item="{ element }">
@@ -44,11 +45,35 @@
         </div>
       </div>
     </div>
+
+    <!-- Global Trash Bin outside days loop -->
+    <div
+      class="trash-bin card text-center p-3 my-4 border border-danger rounded"
+      style="min-height: 100px"
+    >
+      <h5>Drag Here to Delete</h5>
+      <draggable
+        :list="trash"
+        :group="{ name: 'recipes', pull: false, put: true }"
+        itemKey="id"
+        @add="onTrashAdd"
+        class="trash-droppable"
+        :clone="cloneRecipe"
+        :sort="false"
+      >
+        <template #item="{ element }">
+          <div class="card bg-danger text-white p-2 small">
+            {{ element.title }}
+          </div>
+        </template>
+      </draggable>
+    </div>
   </div>
 </template>
 
 <script setup>
 import draggable from "vuedraggable";
+import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useMealPlannerStore } from "../../stores/mealPlannerStore";
 
@@ -59,10 +84,39 @@ const { fetchRecipes, fetchMealPlan, saveMealPlan } = store;
 fetchRecipes();
 fetchMealPlan();
 
+const trash = ref([]);
+
 function cloneRecipe(recipe) {
-  return { ...recipe}
+  return { ...recipe };
 }
 
+function onRecipeRemoved(day) {
+  return (event) => {
+    if (!event.to || !event.to.__draggable_context) return;
+
+    const toList = event.to.__draggable_context.list;
+    if (toList === recipes.value) return; // dropped back to pool, ignore
+
+    saveMealPlan();
+  };
+}
+
+
+function onTrashAdd(event) {
+  const draggedRecipe = event.clone;
+
+  for (const day in mealPlan.value) {
+    const index = mealPlan.value[day].findIndex(r => r.id === draggedRecipe.id);
+    if (index !== -1) {
+      store.removeRecipeFromDay(day, index);
+      console.log(`Deleted "${draggedRecipe.title}" from ${day}`);
+      break;
+    }
+  }
+saveMealPlan(); 
+  console.log("Meal plan after deletion:", JSON.stringify(mealPlan.value));
+
+}
 </script>
 
 <style scoped>
@@ -73,5 +127,10 @@ function cloneRecipe(recipe) {
   font-size: 0.85rem;
   width: 100px;
   cursor: grab;
+}
+.trash-bin {
+  background-color: #ffe6e6;
+  cursor: pointer;
+  user-select: none;
 }
 </style>

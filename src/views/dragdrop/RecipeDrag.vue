@@ -5,7 +5,8 @@
     <div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
       <draggable
         :list="recipes"
-        group="recipes"
+        :group="{ name: 'recipes', pull: 'clone', put: false }"
+        :clone="cloneRecipe"
         itemKey="id"
         class="d-flex flex-wrap gap-2"
       >
@@ -20,11 +21,7 @@
     <h3 class="mb-4">Meal Planner Calendar</h3>
 
     <div class="row row-cols-1 row-cols-md-4 g-4">
-      <div
-        class="col"
-        v-for="(dayRecipes, day) in mealPlan"
-        :key="day"
-      >
+      <div class="col" v-for="(dayRecipes, day) in mealPlan" :key="day">
         <div class="card h-100">
           <div class="card-header text-center fw-bold bg-primary text-white">
             {{ day }}
@@ -32,7 +29,7 @@
           <div class="card-body">
             <draggable
               :list="mealPlan[day]"
-              group="recipes"
+              :group="{ name: 'recipes', pull: true, put: true }"
               itemKey="id"
               @add="saveMealPlan"
               class="d-flex flex-column gap-2"
@@ -51,16 +48,21 @@
 </template>
 
 <script setup>
-import draggable from 'vuedraggable'
-import { storeToRefs } from 'pinia'
-import { useMealPlannerStore } from '../../stores/mealPlannerStore'
+import draggable from "vuedraggable";
+import { storeToRefs } from "pinia";
+import { useMealPlannerStore } from "../../stores/mealPlannerStore";
 
-const store = useMealPlannerStore()
-const { recipes, mealPlan } = storeToRefs(store)
-const { fetchRecipes, fetchMealPlan, saveMealPlan } = store
+const store = useMealPlannerStore();
+const { recipes, mealPlan } = storeToRefs(store);
+const { fetchRecipes, fetchMealPlan, saveMealPlan } = store;
 
-fetchRecipes()
-fetchMealPlan()
+fetchRecipes();
+fetchMealPlan();
+
+function cloneRecipe(recipe) {
+  return { ...recipe}
+}
+
 </script>
 
 <style scoped>

@@ -85,7 +85,7 @@ export const useMealPlannerStore = defineStore('mealPlanner', {
     },
 
     addRecipeToDay(day, recipe) {
-      
+
       this.mealPlan[day].push(recipe)
       this.saveMealPlan()
     },

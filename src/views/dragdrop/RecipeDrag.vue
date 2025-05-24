@@ -1,6 +1,8 @@
 <template>
   <div class="container my-4">
-    <h3 class="mb-3">Available Recipes</h3>
+    <h3 class="mb-3">
+      <i class="bi bi-list-ul me-2"></i>Available Recipes
+    </h3>
 
     <div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
       <draggable
@@ -11,19 +13,26 @@
         class="d-flex flex-wrap gap-2"
       >
         <template #item="{ element }">
-          <div class="card small-card text-center p-2">
-            <strong>{{ element.title }}</strong>
+          <div
+            class="card small-card text-center p-2 border-0 shadow-sm"
+            style="cursor: grab; transition: transform 0.2s ease;"
+            @mouseover="hover = true"
+            @mouseleave="hover = false"
+          >
+            <strong class="text-primary">{{ element.title }}</strong>
           </div>
         </template>
       </draggable>
     </div>
 
-    <h3 class="mb-4">Meal Planner Calendar</h3>
+    <h3 class="mb-4">
+      <i class="bi bi-calendar-week me-2"></i>Meal Planner Calendar
+    </h3>
 
     <div class="row row-cols-1 row-cols-md-4 g-4">
       <div class="col" v-for="(dayRecipes, day) in mealPlan" :key="day">
-        <div class="card h-100">
-          <div class="card-header text-center fw-bold bg-primary text-white">
+        <div class="card h-100 border-primary shadow-sm">
+          <div class="card-header text-center fw-bold bg-gradient bg-primary text-white">
             {{ day }}
           </div>
           <div class="card-body">
@@ -36,7 +45,10 @@
               class="d-flex flex-column gap-2"
             >
               <template #item="{ element }">
-                <div class="card bg-success text-white text-center p-1 small">
+                <div
+                  class="card bg-success text-white text-center p-1 small shadow-sm"
+                  style="cursor: move;"
+                >
                   {{ element.title }}
                 </div>
               </template>
@@ -46,12 +58,14 @@
       </div>
     </div>
 
-    <!-- Global Trash Bin outside days loop -->
+    <!-- Trash Bin -->
     <div
-      class="trash-bin card text-center p-3 my-4 border border-danger rounded"
-      style="min-height: 100px"
+      class="trash-bin card text-center p-4 my-5 border border-3 border-danger rounded-4 shadow-sm"
+      style="min-height: 120px; background-color: #ffeaea;"
     >
-      <h5>Drag Here to Delete</h5>
+      <h5 class="text-danger mb-3">
+        <i class="bi bi-trash3-fill me-2"></i>Drag Here to Delete
+      </h5>
       <draggable
         :list="trash"
         :group="{ name: 'recipes', pull: false, put: true }"
@@ -62,7 +76,7 @@
         :sort="false"
       >
         <template #item="{ element }">
-          <div class="card bg-danger text-white p-2 small">
+          <div class="card bg-danger text-white p-2 small shadow-sm">
             {{ element.title }}
           </div>
         </template>
@@ -70,6 +84,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup>
 import draggable from "vuedraggable";
@@ -109,12 +124,10 @@ function onTrashAdd(event) {
     const index = mealPlan.value[day].findIndex(r => r.id === draggedRecipe.id);
     if (index !== -1) {
       store.removeRecipeFromDay(day, index);
-      console.log(`Deleted "${draggedRecipe.title}" from ${day}`);
       break;
     }
   }
-saveMealPlan(); 
-  console.log("Meal plan after deletion:", JSON.stringify(mealPlan.value));
+  saveMealPlan(); 
 
 }
 </script>

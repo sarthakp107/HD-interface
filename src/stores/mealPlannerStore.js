@@ -60,7 +60,6 @@ export const useMealPlannerStore = defineStore('mealPlanner', {
     },
 
     async saveMealPlan() {
-      console.log("Sending updated meal plan to backend:", JSON.stringify(this.mealPlan));
 
       try {
         const auth = useAuthStore()

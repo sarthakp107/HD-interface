@@ -1,8 +1,10 @@
 <template>
   <div class="container my-5">
     <h2 class="mb-4">Browse Recipes</h2>
+      <div>
 
       <input v-model="searchQuery" @input="fetchRecipes" class="form-control" placeholder="Search recipes..." />
+      </div>
 
 
     <div v-if="loading" class="text-muted">Loading recipes...</div>
@@ -34,10 +36,11 @@
 <script>
 export default {
   data() {
-    return {   
+    return {
       recipes: [],
       loading: true,
       errorMsg: '',
+      searchQuery: '', // search input
     };
   },
   async mounted() {
@@ -47,13 +50,20 @@ export default {
     async fetchRecipes() {
       this.loading = true;
       this.errorMsg = '';
+
       try {
         const response = await fetch('https://mercury.swin.edu.au/cos30043/s104817068/hd-interface/InterfaceData/get_all_recipes.php');
         const result = await response.json();
 
         if (result.success) {
-          // Add `newComment` field to each recipe object
-          this.recipes = result.recipes.map(r => ({ ...r, newComment: '' }));
+          // Filter on the fly using searchQuery
+          const filtered = result.recipes.filter(recipe =>
+            recipe.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+            recipe.description.toLowerCase().includes(this.searchQuery.toLowerCase())
+          );
+
+          // Add newComment field
+          this.recipes = filtered.map(r => ({ ...r, newComment: '' }));
         } else {
           this.errorMsg = result.message || 'Failed to load recipes.';
         }
@@ -77,7 +87,7 @@ export default {
 
         const result = await response.json();
         if (result.success) {
-          this.fetchRecipes();
+          this.fetchRecipes(); // Refetch and re-filter using current searchQuery
         } else {
           alert(result.message || 'Failed to like recipe.');
         }
@@ -105,7 +115,7 @@ export default {
 
         const result = await response.json();
         if (result.success) {
-          this.fetchRecipes();
+          this.fetchRecipes(); // Refetch and re-filter using current searchQuery
         } else {
           alert(result.message || 'Failed to add comment.');
         }
@@ -115,4 +125,5 @@ export default {
     },
   },
 };
+
 </script>

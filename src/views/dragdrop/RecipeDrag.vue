@@ -51,15 +51,16 @@
 </template>
 
 <script setup>
-import draggable from "vuedraggable";
-import { useMealPlannerStore } from "../../stores/mealPlannerStore";
-import { storeToRefs } from "pinia";
+import draggable from 'vuedraggable'
+import { storeToRefs } from 'pinia'
+import { useMealPlannerStore } from '../../stores/mealPlannerStore'
 
-const store = useMealPlannerStore();
-const { recipes, mealPlan } = storeToRefs(store);
-const { saveMealPlan, fetchRecipes } = store;
+const store = useMealPlannerStore()
+const { recipes, mealPlan } = storeToRefs(store)
+const { fetchRecipes, fetchMealPlan, saveMealPlan } = store
 
-fetchRecipes();
+fetchRecipes()
+fetchMealPlan()
 </script>
 
 <style scoped>

@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia';
-import { useAuthStore } from './auth'; // adjust path if needed
+import { defineStore } from 'pinia'
+import { useAuthStore } from './auth'
 
 export const useMealPlannerStore = defineStore('mealPlanner', {
   state: () => ({
@@ -18,57 +18,81 @@ export const useMealPlannerStore = defineStore('mealPlanner', {
   actions: {
     async fetchRecipes() {
       try {
-        const response = await fetch('https://mercury.swin.edu.au/cos30043/s104817068/hd-interface/InterfaceData/get_all_recipes.php');
-        const result = await response.json();
+        const res = await fetch('https://mercury.swin.edu.au/cos30043/s104817068/hd-interface/InterfaceData/get_all_recipes.php')
+        const result = await res.json()
         if (result.success) {
-          this.recipes = result.recipes;
+          this.recipes = result.recipes
         }
-      } catch (err) {
-        console.error('Error fetching recipes:', err);
+      } catch (error) {
+        console.error('Error fetching recipes:', error)
       }
     },
 
-    addRecipeToDay(day, recipe) {
-      this.mealPlan[day].push(recipe);
-    },
-
-    removeRecipeFromDay(day, index) {
-      this.mealPlan[day].splice(index, 1);
+    async fetchMealPlan() {
+      try {
+        const auth = useAuthStore()
+        if (!auth.userId) {
+          console.warn('User not logged in')
+          return
+        }
+        const res = await fetch(`https://mercury.swin.edu.au/cos30043/s104817068/hd-interface/InterfaceData/get_mealplan.php?user_id=${auth.userId}`)
+        const data = await res.json()
+        if (data.success) {
+          if (data.mealPlan) {
+            this.mealPlan = data.mealPlan
+          } else {
+            // default empty meal plan if none saved
+            this.mealPlan = {
+              Monday: [],
+              Tuesday: [],
+              Wednesday: [],
+              Thursday: [],
+              Friday: [],
+              Saturday: [],
+              Sunday: [],
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching meal plan:', err)
+      }
     },
 
     async saveMealPlan() {
       try {
-        const authStore = useAuthStore();
-        const userId = authStore.userId;
-
-        if (!userId) {
-          alert('User not authenticated');
-          return;
+        const auth = useAuthStore()
+        if (!auth.userId) {
+          console.warn('User not logged in')
+          return
         }
 
-        const response = await fetch('https://mercury.swin.edu.au/cos30043/s104817068/hd-interface/InterfaceData/saveMealPlan.php', {
+        const res = await fetch('https://mercury.swin.edu.au/cos30043/s104817068/hd-interface/InterfaceData/saveMealPlan.php', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            user_id: userId,
-            meal_plan: this.mealPlan,
+            user_id: auth.userId,
+            mealPlan: this.mealPlan,
           }),
-        });
+        })
 
-        const result = await response.json();
-
-        if (!result.success) {
-          console.error('Save failed:', result.message);
-          alert('Save failed: ' + result.message);
-        } else {
-          alert('Meal plan saved successfully!');
+        const data = await res.json()
+        if (!data.success) {
+          console.error('Failed to save meal plan:', data.message)
         }
       } catch (err) {
-        console.error('Error saving meal plan:', err);
-        alert('Error saving meal plan');
+        console.error('Error saving meal plan:', err)
       }
     },
+
+    addRecipeToDay(day, recipe) {
+      
+      this.mealPlan[day].push(recipe)
+      this.saveMealPlan()
+    },
+
+    removeRecipeFromDay(day, index) {
+      this.mealPlan[day].splice(index, 1)
+      this.saveMealPlan()
+    },
   },
-});
+})

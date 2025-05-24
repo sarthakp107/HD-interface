@@ -68,7 +68,7 @@
         <i class="bi bi-trash3-fill me-2"></i>Drag Here to Delete
       </h5>
       <draggable
-        :list="trash"
+        :list="[]"
         :group="{ name: 'recipes', pull: false, put: true }"
         itemKey="id"
         @add="onTrashAdd"
@@ -129,7 +129,6 @@ function onTrashAdd(event) {
     }
   }
   saveMealPlan(); 
-
 }
 </script>
 
